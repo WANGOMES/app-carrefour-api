@@ -8,19 +8,23 @@ import Panel from './components/Panel'
 
 function Main(){
 
+    const [ data, setData ] = useState({})
+    const [ cep, setCep ] = useState(31660250)
+    const [ pdv, setPdv ] = useState("carrefourbr1056")
 
-
-    const [data, setData] = useState({})
-    const [cep, setCep] = useState(31660250)
-
-    const getPDVData = useCallback((cep)=>{
+    const getProductPDVData = useCallback((cep, pdv)=>{
         getPDV(cep)
-        .then((data) => setData(data))
+        .then((data2) => setData(data2))
+        .then(
+            getProductPDV(pdv)
+            .then((data)=> setData(data))
+        )
+            
     },[])
 
     useEffect(()=>{
-        getPDVData(cep)
-    }, [cep, getPDVData])
+        getProductPDVData(cep)
+    }, [cep, getProductPDVData])
 
     const handleChange = ({target}) =>{
         const cep = target.value
@@ -33,7 +37,7 @@ function Main(){
                 onChange={handleChange}
                 data={data}
                 cep={cep}
-                getPDVData={getPDVData}
+                getProductPDVData={getProductPDVData}
             />
         </div>
     )
